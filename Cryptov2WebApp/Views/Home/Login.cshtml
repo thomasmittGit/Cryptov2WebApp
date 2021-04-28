@@ -1,0 +1,33 @@
+﻿@model Cryptov2WebApp.Models.Users
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Sass/Login.min.css" rel="stylesheet" />
+    <title>Login</title>
+</head>
+<body>
+    @using (Html.BeginForm("Login", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal login", @id = "formContainer" }))
+    {
+        if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">Fechar</button>
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            </div>
+        }
+        @Html.TextBoxFor(m => m.username, new { placeholder = "Usuário", autocomplete = "off" })
+        @Html.TextBoxFor(m => m.senha, new { type = "password", placeholder = "Senha", autocomplete = "off" })
+        <button type="submit">Login</button>
+    }
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

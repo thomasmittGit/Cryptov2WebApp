@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Cryptov2WebApp.DataBaseExtract;
 using Cryptov2WebApp.Filters;
+using Cryptov2WebApp.WorkClasses;
 
 namespace Cryptov2WebApp.Controllers
 {
@@ -47,7 +48,7 @@ namespace Cryptov2WebApp.Controllers
                 {
                     if (UsersDB.ValidateLogin(vm.username, vm.senha) != null)
                     {
-                        return RedirectToAction("Home");
+                        return RedirectToAction("Menu");
                     }
                     else
                     {
@@ -67,10 +68,13 @@ namespace Cryptov2WebApp.Controllers
             }
         }
 
-        [UserAuth]
         [HttpGet]
         public ActionResult Menu()
         {
+            if (SessionVariables.usuarioLogado == null)
+            {
+                return RedirectToAction("Login");
+            }
             return View();
         } 
     }

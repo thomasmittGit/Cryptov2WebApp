@@ -69,7 +69,7 @@ namespace Cryptov2WebApp.Controllers
 
         [UserAuth]
         [HttpGet]
-        public ActionResult Home()
+        public ActionResult Menu()
         {
             return View();
         } 

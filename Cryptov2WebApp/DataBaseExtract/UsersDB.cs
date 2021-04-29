@@ -6,10 +6,11 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using Cryptov2WebApp.WorkClasses;
+using System.Data;
 
 namespace Cryptov2WebApp.DataBaseExtract
 {
-    public static class UsersDB
+    public class UsersDB
     {
         private static String connString = ConfigurationManager.ConnectionStrings["API"].ToString();
 
@@ -17,22 +18,25 @@ namespace Cryptov2WebApp.DataBaseExtract
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                String QUERY = "SELECT TOP(1) * FROM [API].[dbo].[Users] WHERE [username] = '" + usuario + "' AND[senha] = '" + usuario + "'";
-
+                String QUERY = "SELECT TOP(1) * FROM [API].[dbo].[Users] WHERE [username] = '" + usuario + "' AND [senha] = '" + senha + "'";
                 SqlCommand cmd = new SqlCommand(QUERY, conn);
 
                 conn.Open();
 
-                SqlDataReader dr = cmd.ExecuteReader();
-
                 Users user = null;
-                if (dr.HasRows)
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                 {
-                    user = new Users();
-                    user.id = (Int32)dr.GetValue(1);
-                    user.username = (String)dr.GetValue(2);
-                    user.senha = (String)dr.GetValue(3);
-                    user.apiKey = (Int32)dr.GetValue(4);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        user = new Users();
+                        user.id = (Int32)dt.Rows[0]["id"];
+                        user.username = dt.Rows[0]["username"].ToString();
+                        user.senha = dt.Rows[0]["senha"].ToString();
+                        user.apiKey = (Int32)dt.Rows[0]["apiKey"];
+                    }
                 }
 
                 SessionVariables.usuarioLogado = user;
